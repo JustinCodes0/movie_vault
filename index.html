@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Latest compiled and minified CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Movie Vault</title>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <section class="section_one">
+      <nav class="navbar navbar-expand-sm navbar-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="javascript:void(0)"
+            ><img
+              src="images/movievaultlogo.png"
+              alt="Movie Vault Logo"
+              srcset=""
+          /></a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mynavbar"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="mynavbar">
+            <form class="d-flex">
+              <input
+                class="form-control me-2"
+                type="text"
+                placeholder="Search"
+              />
+              <button class="btn btn-primary" type="button">Search</button>
+            </form>
+          </div>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle"
+              data-bs-toggle="dropdown"
+            >
+              Movie Collections
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Link 1</a></li>
+              <li><a class="dropdown-item" href="#">Link 2</a></li>
+              <li><a class="dropdown-item" href="#">Link 3</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </section>
+    <form action="/action_page.php">
+      <div class="mb-3 mt-3">
+        <label for="title" class="form-label">Movie Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          placeholder="Enter movie title"
+          name="movie_title"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="des" class="form-label">Movie Description</label>
+        <input
+          type="text"
+          class="form-control"
+          id="des"
+          placeholder="Enter movie description"
+          name="desc"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="url" class="form-label">Upload Movie</label>
+        <input
+          type="text"
+          class="form-control"
+          id="url"
+          placeholder="Enter video url"
+          name="movie_url"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="rate" class="form-label">Movie Rating</label>
+        <input
+          type="text"
+          class="form-control"
+          id="rate"
+          placeholder="Enter movie rating"
+          name="movie_rating"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="pwd" class="form-label"> Movie Year</label>
+        <input
+          type="number"
+          class="form-control"
+          id="year"
+          placeholder="Enter movie year"
+          name="movie_year"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Add Movie</button>
+    </form>
+  </body>
+</html>
