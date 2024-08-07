@@ -3,6 +3,7 @@ class Movie {
     this.title = "";
     this.description = "";
     this.movieurl = "";
+    this.embedUrl = "";
     this.rating = "";
     this.year = new Date().getFullYear();
   }
@@ -15,10 +16,14 @@ function addMovie() {
   const movieRating = document.getElementById("rating").value;
   const movieYear = document.getElementById("year").value;
 
+  const videoID = uploadUrl.split("/").pop();
+  const embedURL = `https://www.youtube.com/embed/${videoID}`;
+
   let movie = new Movie();
   movie.title = movieTitle;
   movie.description = moviedescription;
   movie.movieurl = uploadUrl;
+  movie.embedUrl = embedURL; // Embedded URL
   movie.rating = movieRating;
   movie.year = movieYear;
 
@@ -40,8 +45,16 @@ function addMovie() {
 
 function displayMovie(movie) {
   const moviesContainer = document.getElementById("moviesContainer");
+  const movieRating = document.getElementById("rating").value;
+  const uploadUrl = document.getElementById("mlink").value;
+
   let rows = moviesContainer.getElementsByClassName("row");
   let lastRow = rows[rows.length - 1];
+  const movieRate = Number(movieRating);
+  // let videoID = uploadUrl.split("/").pop();
+  const embedURL = movie.embedUrl; // Use embedded URL from movie objec
+
+  for (i = 0; i <= movieRate; i++) {}
 
   if (!lastRow || lastRow.children.length >= 4) {
     lastRow = document.createElement("div");
@@ -67,7 +80,7 @@ function displayMovie(movie) {
   <div style="height: 23rem;">
    <i class="fas fa-arrows-alt float-end bg-light rounded-5 m-2" style="font-size: 20px; color: navy"></i>
     <iframe
-      src="${movie.movieurl}"
+      src="${embedURL}"
       title="YouTube video player"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -116,7 +129,12 @@ function displayMovie(movie) {
   <div class="card-body d-flex flex-column justify-content-center align-items-center mt-4 ">
   
                     <h5 class="card-title">${movie.title}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Year: (${movie.year})</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Year: (${
+                      movie.year
+                    })</h6>
+                    <div class="star-rating">Rating: ${generateStars(
+                      movie.rating
+                    )}</div>
                   
                 </div>
   
@@ -145,7 +163,16 @@ function displayMovie(movie) {
   });
 }
 //  end of displayMovies function
-
+// Function to generate stars
+function generateStars(rating) {
+  const starCount = Math.min(Math.max(rating, 0), 5); //Set the rating between 0 - 5
+  let stars = "";
+  for (let i = 0; i < starCount; i++) {
+    stars += `<i class="fas fa-star text-warning"></i>`;
+  }
+  return stars;
+}
+// generate stars function ends
 // Load Movies Function begins
 
 function loadMovies() {
@@ -159,12 +186,13 @@ function loadMovies() {
         movie.title &&
         movie.description &&
         movie.movieurl &&
+        movie.embedUrl &&
         movie.rating &&
         movie.year
       ) {
         displayMovie(movie);
       } else {
-        console.warn(`Invalid book data for key "${key}":`, movie);
+        console.warn(`Invalid movie data for key "${key}":`, movie);
       }
     } catch (e) {
       console.error(`Error parsing JSON for key "${key}":`, e);
