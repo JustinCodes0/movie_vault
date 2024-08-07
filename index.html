@@ -81,14 +81,17 @@
     </section>
 
     <div class="d-flex justify-content-between p-5">
-      <form id="movieForm" class="w-25 shadow-lg bg-primary rounded-4 p-3">
+      <form
+        id="movieForm"
+        class="w-25 shadow-lg bg-primary rounded-4 p-3 h-100"
+      >
         <div class="mb-3 mt-3">
           <label for="movie_title" class="form-label">Movie Title</label>
           <input
             type="text"
             class="form-control"
             id="movie_title"
-            placeholder="Enter Book Name"
+            placeholder="Enter Movie Title"
             name="mtitle"
           />
         </div>
@@ -142,7 +145,11 @@
           Add Movie
         </button>
       </form>
-      <div id="moviesContainer" class="row mt-5 w-75 d-flex container"></div>
+      <div
+        id="moviesContainer"
+        class="row w-75 d-flex container"
+        style="display: flex; flex-wrap: wrap; overflow-y: auto"
+      ></div>
     </div>
     <script src="script.js"></script>
   </body>
