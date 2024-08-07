@@ -47,4 +47,5 @@ localStorage.setItem(movie.name, JSON.stringify(movie));
   document.getElementById("form-id").reset();
 
   return movie;
+
 }
