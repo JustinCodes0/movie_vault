@@ -1,25 +1,10 @@
 class Movie {
-  constructor() {
-    this.title = "";
-    this.des = "";
-    this.url = "";
-    this.rate = "";
-    this.year = new Date().getfullyear();
-  }
-  addMovieTitle() {
-    return this.title;
-  }
-  addMovieDes() {
-    return this.des;
-  }
-  addMovieUrl() {
-    return this.url;
-  }
-  addMovieRate() {
-    return this.rate;
-  }
-  addMovieYear() {
-    return this.year;
+  constructor(title, des, url, rate, year) {
+    this.title = title;
+    this.des = des;
+    this.url = url;
+    this.rate = rate;
+    this.year = year;
   }
 }
 
@@ -30,24 +15,11 @@ function addMovie() {
   const movieRate = document.getElementById("rate").value;
   const movieYear = document.getElementById("year").value;
 
-  let movie = new Movie();
-  movie.title = movieTitle;
-  movie.des = movieDes;
-  movie.url = movieUrl;
-  movie.rate = movieRate;
-  movie.year = movieYear;
-
-localStorage.setItem(movie.name, JSON.stringify(movie));
+  let movie = new Movie(movieTitle, movieDes, movieUrl, movieRate, movieYear);
+  localStorage.setItem(movie.title, JSON.stringify(movie));
   displayMovie(movie);
 
-  console.log (
-    `${movieTitle}, ${movieYear}, ${movieDes}`
-  );
-
   document.getElementById("form-id").reset();
-
-  return movie;
-
 }
 
 function displayMovie(movie) {
@@ -62,82 +34,74 @@ function displayMovie(movie) {
   }
 
   const moviesColDiv = document.createElement("div");
-  moviesColDiv.className = "col-12 col-md-6 col-lg-3 mb-2 ";
+  moviesColDiv.className = "col-12 col-md-6 col-lg-3 mb-2";
   const moviesDiv = document.createElement("div");
   const topDiv = document.createElement("div");
   const bottomDiv = document.createElement("div");
-  moviesDiv.className = "card border-0 equal-div h-100 m-1 shadow-sm ";
+  moviesDiv.className = "card border-0 equal-div h-100 m-1 shadow-sm";
   topDiv.className = "top-div";
   topDiv.style.backgroundImage = `url('${movie.url}')`;
-  topDiv.style.backgroundSize = "url";
+  topDiv.style.backgroundSize = "cover";
   topDiv.style.backgroundPosition = "center";
   topDiv.style.backgroundRepeat = "no-repeat";
 
   topDiv.innerHTML = `
-  <div style="height: 23rem;">
-        <i class="fas fa-arrows-alt float-end text-success bg-light rounded-5 m-2" style="font-size: 20px")"></i>
-
-                    </div>
-                
+    <div style="height: 23rem;">
+      <i class="fas fa-arrows-alt float-end text-success bg-light rounded-5 m-2" style="font-size: 20px"></i>
+    </div>
   `;
 
   const dropdown = document.createElement("div");
   dropdown.style.position = "absolute";
   dropdown.style.top = "30px";
   dropdown.style.right = "10px";
-  dropdown.style.backgroundColor = "white";
+  dropdown.style.backgroundColor = "black";
   dropdown.style.border = "1px solid #ccc";
   dropdown.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
   dropdown.style.display = "none";
   dropdown.innerHTML = `
-  <ul style="list-style: none; padding: 0; margin: 0;">
-    <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
-    <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
-  </ul>
-`;
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
+      <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
+    </ul>
+  `;
 
+  topDiv.appendChild(dropdown);
 
+  const iconEl = topDiv.querySelector(".fa-arrows-alt");
 
-
-
-topDiv.appendChild(dropdown);
-
-const iconEl = topDiv.querySelector(".fa-arrows-alt");
 iconEl.addEventListener("click", function () {
-  if (dropdown.style.display === "none") {
-    dropdown.style.display = "block";
-  } else {
-    dropdown.style.display = "none";
-  }
+  const dropdown = topDiv.querySelector(".dropdown");
+  dropdown.classList.toggle("show"); // Toggle the dropdown visibility
 });
 
-const deleteEl = topDiv.querySelector(".del");
 
-deleteEl.addEventListener("click", function () {
-  alert("delete button was click");
-  localStorage.removeItem(movie.name);
-  moviesDiv.remove();
-});
+  const deleteEl = topDiv.querySelector(".del");
+  deleteEl.addEventListener("click", function () {
+    localStorage.removeItem(movie.title); // Remove from local storage
+    moviesDiv.remove(); // Remove from the DOM
+  });
 
-bottomDiv.innerHTML = `
-<div class="card-body d-flex flex-column justify-content-center align-items-center ">
-  
-                <h5 class="card-title">${book.name}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">by ${book.author} (${book.year})</h6>
-                <p class="card-text d-none">${book.summary}</p>
-                  
-            </div>
-  
+  const editEl = topDiv.querySelector(".edit");
+  editEl.addEventListener("click", function () {
+    editMovie(movie);
+  });
+
+  bottomDiv.innerHTML = `
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+      <h5 class="card-title">${movie.title}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">${movie.year}</h6>
+      <p class="card-text d-none">${movie.des}</p>
+    </div>
   `;
   moviesColDiv.appendChild(moviesDiv);
   moviesDiv.appendChild(topDiv);
   moviesDiv.appendChild(bottomDiv);
 
-  document.getElementById("moviesContainer").appendChild(moviesColDiv);
   lastRow.appendChild(moviesColDiv);
 
-  moviesDiv.addEventListener("mousover", () => {
-    bottomDiv.querySelector(" card-text").classList.remove("d-none");    
+  moviesDiv.addEventListener("mouseover", () => {
+    bottomDiv.querySelector(".card-text").classList.remove("d-none");
   });
 
   moviesDiv.addEventListener("mouseout", () => {
@@ -147,39 +111,54 @@ bottomDiv.innerHTML = `
 
 function loadMovies() {
   for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const moviesData = localStorage.getItem(key);
-    // const book = JSON.parse(moviesData);
+    const key = localStorage.key(i); // Get the key
+    const movieData = localStorage.getItem(key); // Get the data
     try {
-      const movie = JSON.parse(moviesData);
-      if (
-        movie &&
-        movie.title &&
-        movie.des &&
-        movie.year &&
-        movie.rate &&
-        movie.url
-      ) {
-        displayBook(movie);
+      const movie = JSON.parse(movieData); 
+      if (movie && movie.title && movie.des && movie.year && movie.rate && movie.url) {
+        displayMovie(movie);
       } else {
         console.warn(`Invalid movie data for key "${key}":`, movie);
       }
-
-      // Display each movie
-      displayBook(movie);
     } catch (e) {
       console.error(`Error parsing JSON for key "${key}":`, e);
-      // Optionally, remove the invalid entry from local storage
-      localStorage.removeItem(key);
+      localStorage.removeItem(key); 
     }
   }
 }
-// Prevent the form from submitting and refreshing the page
-document
-  .getElementById("form-id")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    addMovie();
-  });
+
+function editMovie(movie) {
+  document.getElementById("title").value = movie.title;
+  document.getElementById("des").value = movie.des;
+  document.getElementById("url").value = movie.url;
+  document.getElementById("rate").value = movie.rate;
+  document.getElementById("year").value = movie.year;
+
+  localStorage.removeItem(movie.title); 
+
+
+  document.getElementById("button-4").textContent = "Update Movie";
+}
+
+function searchMovies() {
+  const searchTerm = document.getElementById("input-1").value.toLowerCase();
+  const moviesContainer = document.getElementById("moviesContainer");
+  moviesContainer.innerHTML = ""; 
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const movieData = localStorage.getItem(key);
+    try {
+      const movie = JSON.parse(movieData);
+      if (movie.title.toLowerCase().includes(searchTerm)) {
+        displayMovie(movie);
+      }
+    } catch (e) {
+      console.error(`Error parsing JSON for key "${key}":`, e);
+    }
+  }
+}
+
+document.getElementById("button-2").addEventListener("click", searchMovies);
 
 window.onload = loadMovies;

@@ -22,59 +22,36 @@
   <body>
     <!-- Navigation Bar -->
     <section class="section_one">
-      <nav class="navbar navbar-expand-sm navbar-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="javascript:void(0)"
-            ><img
-              src="images/movievaultlogo.png"
-              alt="Movie Vault Logo"
-              srcset=""
-          /></a>
-          <button id="button-1"
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mynavbar"
-          >
-            <span class="navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-sm navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="javascript:void(0)"><img src="images/movievaultlogo.png" alt="Movie Vault Logo" /></a>
+        <button id="button-1" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mynavbar">
+          <form id="form-1" onsubmit="event.preventDefault(); searchMovies();">
+            <input id="input-1" class="form-control me-2 search-movies" type="text" placeholder="Search Movies" />
+          </form>
+          <button id="button-2" class="btn btn-primary" type="button">
+            <i class="bi bi-search"></i>
           </button>
-          <div class="collapse navbar-collapse" id="mynavbar">
-            <form id="form-1">
-              <input id="input-1"
-                class="form-control me-2 search-movies"
-                type="text"
-                placeholder="Search Movies"
-              />
-            </form>
-            <!--move button closer to input-1 and resize it-->
-            <button id="button-2"
-                class="btn btn-primary" 
-                type="button"
-              >
-                <i class="bi bi-search"></i> 
-            </button>
-            
-          </div>
-          <div class="dropdown">
-            <button id="button-3"
-              type="button"
-              class="btn btn-primary dropdown-toggle"
-              data-bs-toggle="dropdown"
-            >
-              Movie Collections
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Link 1</a></li>
-              <li><a class="dropdown-item" href="#">Link 2</a></li>
-              <li><a class="dropdown-item" href="#">Link 3</a></li>
-            </ul>
-          </div>
         </div>
-      </nav>
-    </section>
+        <div class="dropdown">
+          <button id="button-3" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+            Movie Collections
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Link 1</a></li>
+            <li><a class="dropdown-item" href="#">Link 2</a></li>
+            <li><a class="dropdown-item" href="#">Link 3</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </section>
     <!-- form -->
     <div class="form-container">
-    <form id="form-id" class="form-2" action="/action_page.php">
+      <form id="form-id" class="form-2" action="javascript:void(0);">
       <div class="mb-3 mt-3">
         <label for="title" class="form-label">Movie Title:</label>
         <input
