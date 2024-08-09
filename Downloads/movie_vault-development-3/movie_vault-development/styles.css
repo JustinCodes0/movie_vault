@@ -1,0 +1,160 @@
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0; 
+  padding: 0; 
+  background-color: #1f1f1f; 
+  background-image: url('images/bg-image.jpg'); 
+  background-size: cover;  
+  background-repeat: no-repeat; 
+}
+
+.navbar-brand img {
+  position: relative;
+  top: 0px;
+  bottom: auto;
+  right: auto;
+  left: 80px;
+  width: 300px;
+  margin: 20px auto;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-color: #fafafa;
+}
+
+.btn-primary {
+  height: auto;
+  width: auto;
+  border-radius: 0;
+  background-color: #002F69;
+  border-color: #007bff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+#button-2 {
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  right: 0;
+  left: 160px;
+  height: 55px;
+  width: 55px;
+  font-size: 25px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  top: 0px;
+  bottom: 0;
+  right: 0;
+  left: -280px;
+}
+.dropdown-menu {
+  background-color: #fafafa;
+}
+
+
+.dropdown-item:hover {
+  background-color: #0056b3;
+  color: #fafafa;
+}
+
+
+#form-1 {
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  right: 0;
+  left: 200px;
+}
+
+.search-movies {
+  background-color: #fafafa;
+  text-align: center;
+  font-size: larger;
+  color: #1f1f1f;
+}
+
+#input-1 {
+  margin: 10px; 
+  background-color: #fafafa;
+  padding: 20px, 0px, 0px, 20px;
+  width: 400px;
+  height: 50px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.form-2 {
+  position: relative;
+  bottom: 20px;
+  right: 0;
+  left: 75px;
+  width: 300px;
+  margin: 20px; 
+  background-color: #0087ff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#button-4 {
+  position: relative;
+  top: 5px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 260px;
+  padding: 10px;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.mb-3 {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.top-div {
+  position: relative; 
+}
+
+.dropdown-menu {
+  background-color: white; 
+  border: 1px solid #ccc; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+  display: none; 
+}
+
+.show {
+  display: block;
+}
+
+.dropdown-menu ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+}

@@ -1,0 +1,11 @@
+local storage
+users to search movies
+change to variable names and customize it to the movie
+list thing
+
+the delete is already working
+
+add asyncornous 
+add edit function
+add search function
+the delete function needs asyncornous 
