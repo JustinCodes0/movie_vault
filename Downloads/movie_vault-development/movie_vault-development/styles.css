@@ -67,10 +67,7 @@ body {
   background-color: #fafafa;
 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 776c5683cf6a35444518b582bd482a750dd2a9b1
 .dropdown-item:hover {
   background-color: #0056b3;
   color: #fafafa;
@@ -134,16 +131,12 @@ body {
 .mb-3 {
   margin-left: auto;
   margin-right: auto;
-<<<<<<< HEAD
-}
-=======
 }
 
 .top-div {
   position: relative; 
 }
 
-/* style for top-div drop down*/
 .dropdown-menu {
   background-color: white; 
   border: 1px solid #ccc; 
@@ -165,4 +158,3 @@ body {
   padding: 10px;
   cursor: pointer;
 }
->>>>>>> 776c5683cf6a35444518b582bd482a750dd2a9b1
