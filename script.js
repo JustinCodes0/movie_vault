@@ -1,219 +1,355 @@
 class Movie {
-    constructor() {
-        this.title = "";
-        this.description = "";
-        this.movieurl = "";
-        this.embedUrl = "";
-        this.rating = "";
-        this.year = new Date().getFullYear();
-        this.imageUrl = ""; 
-    }
-}
-
-function extractVideoID(url) {
-    const regex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : '';
+  constructor() {
+    this.title = "";
+    this.description = "";
+    this.movieurl = "";
+    this.embedUrl = "";
+    this.rating = "";
+    this.year = new Date().getFullYear();
+  }
 }
 
 function addMovie() {
-    const movieTitle = document.getElementById("movie_title").value;
-    const movieDescription = document.getElementById("m_description").value;
-    const uploadUrl = document.getElementById("mlink").value;
-    const movieRating = document.getElementById("rating").value;
-    const movieYear = document.getElementById("year").value;
+  const movieTitle = document.getElementById("movie_title").value;
+  const moviedescription = document.getElementById("m_description").value;
+  const uploadUrl = document.getElementById("mlink").value;
+  const movieRating = document.getElementById("rating").value;
+  const movieYear = document.getElementById("year").value;
 
-    // Extract video ID and create embed URL
-    const videoID = extractVideoID(uploadUrl);
-    const embedURL = videoID ? `https://www.youtube.com/embed/${videoID}` : '';
+  const videoID = uploadUrl.split("/").pop();
+  const embedURL = `https://www.youtube.com/embed/${videoID}`;
 
-    let movie = new Movie();
-    movie.title = movieTitle;
-    movie.description = movieDescription;
-    movie.movieurl = uploadUrl;
-    movie.embedUrl = embedURL;
-    movie.rating = movieRating;
-    movie.year = movieYear;
-    movie.imageUrl = `https://img.youtube.com/vi/${videoID}/hqdefault.jpg`; // Get video thumbnail
+  let movie = new Movie();
+  movie.title = movieTitle;
+  movie.description = moviedescription;
+  movie.movieurl = uploadUrl;
+  movie.embedUrl = embedURL; // Embedded URL
+  movie.rating = movieRating;
+  movie.year = movieYear;
 
-    // Update existing movie or add new movie
-    const submitButton = document.querySelector("#movieForm button");
-    const isEditing = submitButton.dataset.editing;
+  localStorage.setItem(movie.title, JSON.stringify(movie));
+  // console.log(localStorage.getItem(book));
+  displayMovie(movie);
 
-    if (isEditing) {
-        localStorage.removeItem(isEditing);
-        localStorage.setItem(movie.title, JSON.stringify(movie));
+  console.log(
+    `this movie is title ${movieTitle}: here' a description of it : ${moviedescription} it was released in the year: ${movieYear} here is the url ${movie.movieurl}.`
+  );
 
-        updateMovieCard(isEditing, movie);
-        
-        submitButton.dataset.editing = "";
-        submitButton.textContent = "Add Movie"; // Reset button text
-    } else {
-        localStorage.setItem(movie.title, JSON.stringify(movie));
-        displayMovie(movie);
-    }
+  // Clear the form fields after adding the book
+  document.getElementById("movieForm").reset();
 
-    console.log(`Movie ${isEditing ? 'updated' : 'added'}: ${movie.title}`);
-
-    document.getElementById("movieForm").reset();
+  return movie;
 }
+
+// Function to display the movies
 
 function displayMovie(movie) {
-    const moviesContainer = document.getElementById("moviesContainer");
+  const moviesContainer = document.getElementById("moviesContainer");
+  const movieRating = document.getElementById("rating").value;
+  const uploadUrl = document.getElementById("mlink").value;
 
-    const movieColDiv = document.createElement("div");
-    movieColDiv.className = "col-12 col-md-6 col-lg-3 mb-2";
-    movieColDiv.id = `movie-${movie.title}`; // Unique ID for deletion
+  let rows = moviesContainer.getElementsByClassName("row");
+  let lastRow = rows[rows.length - 1];
+  const movieRate = Number(movieRating);
+  // let videoID = uploadUrl.split("/").pop();
+  const embedURL = movie.embedUrl || "about:blank";
+  console.log("Embed URL:", embedURL);
 
-    const movieDiv = document.createElement("div");
-    movieDiv.className = "card border-0 equal-div h-100 shadow-sm";
+  for (i = 0; i <= movieRate; i++) {}
 
-    const topDiv = document.createElement("div");
-    topDiv.className = "top-div";
+  if (!lastRow || lastRow.children.length >= 4) {
+    lastRow = document.createElement("div");
+    lastRow.className = "row mt-1";
+    moviesContainer.appendChild(lastRow);
+  }
 
-    topDiv.setAttribute("data-bs-toggle", "popover");
-    topDiv.setAttribute("data-bs-content", movie.description);
-    topDiv.setAttribute("title", movie.title);
-    topDiv.setAttribute("data-bs-trigger", "hover");
-    topDiv.setAttribute("data-bs-placement", "bottom");
+  const movieColDiv = document.createElement("div");
+  movieColDiv.className = "col-12 col-md-6 col-lg-3 mb-2 ";
+  const movieDiv = document.createElement("div");
+  const topDiv = document.createElement("div");
+  const bottomDiv = document.createElement("div");
+  movieDiv.className = "card border-0 equal-div h-100 shadow-sm ";
+  topDiv.className = "top-div";
 
-    topDiv.innerHTML = `
-    <div style="height: 23rem;">
-        <i class="fas fa-arrows-alt float-end bg-light rounded-5 m-2" style="font-size: 20px; color: navy"></i>
-        <img
-            src="${movie.imageUrl}" 
-            alt=""
-            style="width: 100%; height: 100%; object-fit: cover;"
-        />
-    </div>
+  // Add data attributes for Bootstrap popover
+  topDiv.setAttribute("data-bs-toggle", "popover");
+  topDiv.setAttribute("data-bs-content", movie.description);
+  topDiv.setAttribute("title", movie.title);
+  topDiv.setAttribute("data-bs-trigger", "hover");
+  topDiv.setAttribute("data-bs-placement", "bottom");
+  topDiv.innerHTML = `
+  <div style="height: 23rem; position: relative;">
+      <i id="dropdown-toggle-${movie.title}" class="fas fa-arrows-alt float-end bg-light rounded-5 m-2" style="font-size: 20px; color: navy; cursor: pointer;"></i>
+      <img
+          src="${movie.imageUrl}" 
+          alt=""
+          style="width: 100%; height: 100%; object-fit: cover;"
+      />
+      <div id="dropdown-menu-${movie.title}" style="display: none; position: absolute; top: 9%; right: 0; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;">
+          <ul style="list-style: none; padding: 0; margin: 0;">
+              <li class="edit" style="padding: 5px; cursor: pointer;">Edit Movie</li>
+              <li class="del" style="padding: 5px; cursor: pointer;">Delete Movie</li>
+          </ul>
+      </div>
+
+<style>
+#dropdown-menu-${movie.title} li:hover {
+  background-color: #f0f0f0; /* Light gray color */
+}
+</style>
+
+  </div>
+`;
+  const dropdown = document.createElement("div");
+  dropdown.style.position = "absolute";
+  dropdown.style.top = "30px";
+  dropdown.style.right = "10px";
+  dropdown.style.backgroundColor = "white";
+  dropdown.style.border = "1px solid #ccc";
+  dropdown.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.1)";
+  dropdown.style.display = "none";
+  dropdown.innerHTML = `
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
+      <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
+    </ul>
   `;
 
-    const dropdown = document.createElement("div");
-    dropdown.className = "dropdown-menu position-relative";
-    dropdown.innerHTML = `
-        <ul style="list-style: none; padding: 0; margin: 0; position: relative; top: 0px; bottom: 0px;">
-            <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
-            <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
-        </ul>
-    `;
-    topDiv.appendChild(dropdown);
+  topDiv.appendChild(dropdown);
 
-    const iconEl = topDiv.querySelector(".fa-arrows-alt");
-    iconEl.addEventListener("click", function (event) {
-        event.stopPropagation(); // Prevent event bubbling
-        dropdown.classList.toggle("show");
-    });
+  const iconEl = topDiv.querySelector(".fa-arrows-alt");
+  iconEl.addEventListener("click", function () {
+    if (dropdown.style.display === "none") {
+      dropdown.style.display = "block";
 
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (event) {
-        if (!topDiv.contains(event.target)) {
-            dropdown.classList.remove("show");
+      // Add a one-time event listener to close the dropdown when clicking outside
+      document.addEventListener("click", function handleClickOutside(event) {
+        if (!dropdown.contains(event.target) && event.target !== iconEl) {
+          dropdown.style.display = "none";
+          document.removeEventListener("click", handleClickOutside);
         }
-    });
+      });
+    } else {
+      dropdown.style.display = "none";
+    }
+  });
 
-    // Delete movie event listener
-    const deleteEl = dropdown.querySelector(".del");
-    deleteEl.addEventListener("click", function () {
-        if (confirm("Are you sure you want to delete this movie?")) {
-            // Remove bootstrap popover instance
-            const popoverInstance = bootstrap.Popover.getInstance(topDiv);
-            if (popoverInstance) {
-                popoverInstance.dispose();
-            }
-            movieColDiv.remove();
-            localStorage.removeItem(movie.title);
-        }
-    });
+  const deleteEl = dropdown.querySelector(".del");
+  deleteEl.addEventListener("click", function () {
+    if (confirm("Are you sure you want to delete this movie?")) {
+      // remove bootstrap popover instance
+      const popoverInstance = bootstrap.Popover.getInstance(topDiv);
+      if (popoverInstance) {
+        popoverInstance.dispose();
+      }
+      movieColDiv.remove();
+      localStorage.removeItem(movie.title);
+    }
+  });
 
-    // Edit movie event listener
-    const editEl = dropdown.querySelector(".edit");
-    editEl.addEventListener("click", function () {
-        document.getElementById("movie_title").value = movie.title;
-        document.getElementById("m_description").value = movie.description;
-        document.getElementById("mlink").value = movie.movieurl;
-        document.getElementById("rating").value = movie.rating;
-        document.getElementById("year").value = movie.year;
-        
-        // Change the button text to "Update Movie"
-        const submitButton = document.querySelector("#movieForm button");
-        submitButton.textContent = "Update Movie";
-        submitButton.dataset.editing = movie.title;
-    });
+  const editEl = dropdown.querySelector(".edit");
+  editEl.addEventListener("click", function () {
+    // Populate the form fields with the existing movie data
+    document.getElementById("movie_title").value = movie.title;
+    document.getElementById("m_description").value = movie.description;
+    document.getElementById("mlink").value = movie.movieurl;
+    document.getElementById("rating").value = movie.rating;
+    document.getElementById("year").value = movie.year;
 
-    const bottomDiv = document.createElement("div");
-    bottomDiv.className = "card-body d-flex flex-column justify-content-center align-items-center mt-4";
-    bottomDiv.innerHTML = `
-        <h5 class="card-title">${movie.title}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Year: ${movie.year}</h6>
-        <div class="star-rating">Rating: ${generateStars(movie.rating)}</div>
-    `;
+    document.getElementById("formBtn").textContent = "Update Movie";
 
-    movieDiv.appendChild(topDiv);
-    movieDiv.appendChild(bottomDiv);
-    movieColDiv.appendChild(movieDiv);
-    moviesContainer.appendChild(movieColDiv);
+    // Update the form submit handler to save the edited movie
+    document.getElementById("movieForm").onsubmit = function (event) {
+      event.preventDefault();
+      updateMovie(movie.title); // Call the function to update the movie
+    };
 
-    // Initialize Bootstrap popover
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
-    });
-}
+    // Scroll to the top of the form so the user can see it
+    document.getElementById("movieForm").scrollIntoView({ behavior: "smooth" });
+  });
 
-function updateMovieCard(oldTitle, movie) {
-    const movieCard = document.getElementById(`movie-${oldTitle}`);
+  bottomDiv.innerHTML = `
+    <div class="card-body d-flex flex-column justify-content-center align-items-center mt-4 ">
     
-    if (movieCard) {
-        // Update card ID and content
-        movieCard.id = `movie-${movie.title}`;
-        
-        const img = movieCard.querySelector("img");
-        const titleEl = movieCard.querySelector(".card-title");
-        const yearEl = movieCard.querySelector(".card-subtitle");
-        const starsEl = movieCard.querySelector(".star-rating");
-        const topDiv = movieCard.querySelector(".top-div");
+                      <h5 class="card-title">${movie.title}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">Year: (${
+                        movie.year
+                      })</h6>
+                      <div class="star-rating">Rating: ${generateStars(
+                        movie.rating
+                      )}</div>
+                    
+                  </div>
+    
+    `;
+  movieColDiv.appendChild(movieDiv);
+  movieDiv.appendChild(topDiv);
+  movieDiv.appendChild(bottomDiv);
 
-        img.src = movie.imageUrl;
-        titleEl.textContent = movie.title;
-        yearEl.textContent = `Year: ${movie.year}`;
-        starsEl.innerHTML = generateStars(movie.rating);
+  document.getElementById("moviesContainer").appendChild(movieColDiv);
+  lastRow.appendChild(movieColDiv);
 
-        // Update popover content
-        topDiv.setAttribute("data-bs-content", movie.description);
-        topDiv.setAttribute("title", movie.title);
-    }
+  movieDiv.addEventListener("mouseover", () => {
+    bottomDiv.querySelector(".card-text").classList.remove("d-none");
+  });
+
+  movieDiv.addEventListener("mouseout", () => {
+    bottomDiv.querySelector(".card-text").classList.add("d-none");
+  });
+
+  // Initialize Bootstrap popover
+  const popoverTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="popover"]')
+  );
+  const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl);
+  });
 }
+//  end of displayMovies function
 
-function generateStars(rating) {
-    const starCount = Math.min(Math.max(rating, 0), 5);
-    let stars = "";
-    for (let i = 0; i < starCount; i++) {
-        stars += `<i class="fas fa-star text-warning"></i>`;
-    }
-    return stars;
-}
+function updateMovie(originalTitle) {
+  // Get the current values from the form
+  const updatedTitle = document.getElementById("movie_title").value;
+  const updatedDescription = document.getElementById("m_description").value;
+  const updatedUrl = document.getElementById("mlink").value;
+  const updatedRating = document.getElementById("rating").value;
+  const updatedYear = document.getElementById("year").value;
 
-function loadMovies() {
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const movieData = localStorage.getItem(key);
-        try {
-            const movie = JSON.parse(movieData);
-            if (movie && movie.title && movie.description && movie.movieurl && movie.embedUrl && movie.rating && movie.year) {
-                displayMovie(movie);
-            } else {
-                console.warn(`Invalid movie data for key "${key}":`, movie);
-            }
-        } catch (e) {
-            console.error(`Error parsing JSON for key "${key}":`, e);
-            localStorage.removeItem(key);
-        }
-    }
-}
+  // Retrieve the original movie data
+  let originalMovie = JSON.parse(localStorage.getItem(originalTitle));
 
-document.getElementById("movieForm").addEventListener("submit", function (event) {
+  // Update the movie object only with new values if they have changed
+  let updatedMovie = {
+    title: updatedTitle !== "" ? updatedTitle : originalMovie.title,
+    description:
+      updatedDescription !== ""
+        ? updatedDescription
+        : originalMovie.description,
+    movieurl: updatedUrl !== "" ? updatedUrl : originalMovie.movieurl,
+    embedUrl:
+      updatedUrl !== ""
+        ? `https://www.youtube.com/embed/${updatedUrl.split("/").pop()}`
+        : originalMovie.embedUrl,
+    rating: updatedRating !== "" ? updatedRating : originalMovie.rating,
+    year: updatedYear !== "" ? updatedYear : originalMovie.year,
+  };
+
+  // Remove the old movie entry if the title was changed
+  if (originalTitle !== updatedTitle) {
+    localStorage.removeItem(originalTitle);
+  }
+
+  // Save the updated movie to localStorage
+  localStorage.setItem(updatedMovie.title, JSON.stringify(updatedMovie));
+
+  // Reload the movies display
+  document.getElementById("moviesContainer").innerHTML = ""; // Clear the container
+  loadMovies(); // Reload the movies
+
+  // Clear the form fields after updating the movie
+  document.getElementById("movieForm").reset();
+
+  // Reset the button text to "Add Movie"
+  const submitButton = document.getElementById("formBtn");
+  submitButton.textContent = "Add Movie"; // Reset to "Add Movie"
+
+  // Reset the form submit handler to the add movie function
+  document.getElementById("movieForm").onsubmit = function (event) {
     event.preventDefault();
     addMovie();
-});
+  };
+
+  alert("Movie updated successfully!");
+}
+
+// Function to generate stars
+function generateStars(rating) {
+  const starCount = Math.min(Math.max(rating, 0), 5); //Set the rating between 0 - 5
+  let stars = "";
+  for (let i = 0; i < starCount; i++) {
+    stars += `<i class="fas fa-star text-warning"></i>`;
+  }
+  return stars;
+}
+
+// generate stars function ends
+// Load Movies Function begins
+
+function loadMovies() {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const movieData = localStorage.getItem(key);
+    try {
+      const movie = JSON.parse(movieData);
+      if (
+        movie &&
+        movie.title &&
+        movie.description &&
+        movie.movieurl &&
+        movie.embedUrl &&
+        movie.rating &&
+        movie.year
+      ) {
+        displayMovie(movie);
+      } else {
+        console.warn(`Invalid movie data for key "${key}":`, movie);
+      }
+    } catch (e) {
+      console.error(`Error parsing JSON for key "${key}":`, e);
+      // Optionally, remove the invalid entry from local storage
+      localStorage.removeItem(key);
+    }
+  }
+}
+
+function searchMovies() {
+  const searchInput = document
+    .getElementById("searchInput")
+    .value.toLowerCase()
+    .trim();
+  const moviesContainer = document.getElementById("moviesContainer");
+
+  // Clear the container
+  moviesContainer.innerHTML = "";
+
+  // Retrieve and filter movies
+  const allMovies = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const movieData = localStorage.getItem(key);
+    try {
+      const movie = JSON.parse(movieData);
+      if (
+        movie &&
+        movie.title &&
+        movie.title.toLowerCase().includes(searchInput)
+      ) {
+        allMovies.push(movie);
+      }
+    } catch (e) {
+      console.error(`Error parsing JSON for key "${key}":`, e);
+      localStorage.removeItem(key);
+    }
+  }
+
+  // Display filtered movies
+  if (allMovies.length > 0) {
+    allMovies.forEach((movie) => displayMovie(movie));
+  } else {
+    moviesContainer.innerHTML = "<p>No movies found.</p>";
+  }
+}
+
+// Load movies function ends
+document
+  .getElementById("movieForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    addMovie();
+  });
+document
+  .querySelector(".btn.shadow-lg")
+  .addEventListener("click", searchMovies);
+document.getElementById("searchInput").addEventListener("keyup", searchMovies);
 
 window.onload = loadMovies;
