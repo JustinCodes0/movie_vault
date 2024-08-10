@@ -186,6 +186,16 @@ function loadMovies() {
   }
 }
 
+function resetForm() {
+  // Reset form fields
+  document.getElementById("movieForm").reset();
+
+  // Reset button text and state
+  const submitButton = document.querySelector("#movieForm button");
+  submitButton.textContent = "Add Movie"; // Ensure button text is reset
+  submitButton.dataset.editing = ""; // Ensure editing state is cleared
+}
+
 document
   .getElementById("movieForm")
   .addEventListener("submit", function (event) {
