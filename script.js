@@ -200,22 +200,30 @@ function displayMovie(movie) {
 //  end of displayMovies function
 
 function updateMovie(originalTitle) {
+  // Get the current values from the form
   const updatedTitle = document.getElementById("movie_title").value;
   const updatedDescription = document.getElementById("m_description").value;
   const updatedUrl = document.getElementById("mlink").value;
   const updatedRating = document.getElementById("rating").value;
   const updatedYear = document.getElementById("year").value;
 
-  const videoID = updatedUrl.split("/").pop();
-  const updatedEmbedUrl = `https://www.youtube.com/embed/${videoID}`;
+  // Retrieve the original movie data
+  let originalMovie = JSON.parse(localStorage.getItem(originalTitle));
 
+  // Update the movie object only with new values if they have changed
   let updatedMovie = {
-    title: updatedTitle,
-    description: updatedDescription,
-    movieurl: updatedUrl,
-    embedUrl: updatedEmbedUrl,
-    rating: updatedRating,
-    year: updatedYear,
+    title: updatedTitle !== "" ? updatedTitle : originalMovie.title,
+    description:
+      updatedDescription !== ""
+        ? updatedDescription
+        : originalMovie.description,
+    movieurl: updatedUrl !== "" ? updatedUrl : originalMovie.movieurl,
+    embedUrl:
+      updatedUrl !== ""
+        ? `https://www.youtube.com/embed/${updatedUrl.split("/").pop()}`
+        : originalMovie.embedUrl,
+    rating: updatedRating !== "" ? updatedRating : originalMovie.rating,
+    year: updatedYear !== "" ? updatedYear : originalMovie.year,
   };
 
   // Remove the old movie entry if the title was changed
@@ -224,7 +232,7 @@ function updateMovie(originalTitle) {
   }
 
   // Save the updated movie to localStorage
-  localStorage.setItem(updatedTitle, JSON.stringify(updatedMovie));
+  localStorage.setItem(updatedMovie.title, JSON.stringify(updatedMovie));
 
   // Reload the movies display
   document.getElementById("moviesContainer").innerHTML = ""; // Clear the container
