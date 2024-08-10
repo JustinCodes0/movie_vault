@@ -43,13 +43,15 @@ function addMovie() {
     if (isEditing) {
         localStorage.removeItem(isEditing);
         localStorage.setItem(movie.title, JSON.stringify(movie));
+
+        updateMovieCard(isEditing, movie);
+        
         submitButton.dataset.editing = "";
         submitButton.textContent = "Add Movie"; // Reset button text
     } else {
         localStorage.setItem(movie.title, JSON.stringify(movie));
+        displayMovie(movie);
     }
-
-    displayMovie(movie);
 
     console.log(`Movie ${isEditing ? 'updated' : 'added'}: ${movie.title}`);
 
@@ -85,40 +87,47 @@ function displayMovie(movie) {
         />
     </div>
   `;
-const dropdown = document.createElement("div");
+
+    const dropdown = document.createElement("div");
     dropdown.className = "dropdown-menu position-relative";
     dropdown.innerHTML = `
-      <ul style="list-style: none; padding: 0; margin: 0;">
-          <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
-          <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
-      </ul>
-  `;
-  topDiv.appendChild(dropdown);
+        <ul style="list-style: none; padding: 0; margin: 0; position: relative; top: 0px; bottom: 0px;">
+            <li class="edit" style="padding: 10px; cursor: pointer;">Edit Movie</li>
+            <li class="del" style="padding: 10px; cursor: pointer;">Delete Movie</li>
+        </ul>
+    `;
+    topDiv.appendChild(dropdown);
 
-  const iconEl = topDiv.querySelector(".fa-arrows-alt");
-  iconEl.addEventListener("click", function () {
-      const dropdown = topDiv.querySelector(".dropdown-menu");
-      dropdown.classList.toggle("show");
-  });
-// delete movie event listener
-  const deleteEl = dropdown.querySelector(".del");
-  deleteEl.addEventListener("click", function () {
-      if (confirm("Are you sure you want to delete this movie?")) {
-        // remove bootstrap popover instance
-         const popoverInstance = bootstrap.Popover.getInstance(topDiv);
-         if (popoverInstance) {
-          popoverInstance.dispose();
-         }
-          movieColDiv.remove();
-          localStorage.removeItem(movie.title);
-          
-      }
-  });
+    const iconEl = topDiv.querySelector(".fa-arrows-alt");
+    iconEl.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent event bubbling
+        dropdown.classList.toggle("show");
+    });
 
-  // edit movie event listener
-  const editEl = dropdown.querySelector(".edit");
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!topDiv.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+
+    // Delete movie event listener
+    const deleteEl = dropdown.querySelector(".del");
+    deleteEl.addEventListener("click", function () {
+        if (confirm("Are you sure you want to delete this movie?")) {
+            // Remove bootstrap popover instance
+            const popoverInstance = bootstrap.Popover.getInstance(topDiv);
+            if (popoverInstance) {
+                popoverInstance.dispose();
+            }
+            movieColDiv.remove();
+            localStorage.removeItem(movie.title);
+        }
+    });
+
+    // Edit movie event listener
+    const editEl = dropdown.querySelector(".edit");
     editEl.addEventListener("click", function () {
-        
         document.getElementById("movie_title").value = movie.title;
         document.getElementById("m_description").value = movie.description;
         document.getElementById("mlink").value = movie.movieurl;
@@ -130,6 +139,7 @@ const dropdown = document.createElement("div");
         submitButton.textContent = "Update Movie";
         submitButton.dataset.editing = movie.title;
     });
+
     const bottomDiv = document.createElement("div");
     bottomDiv.className = "card-body d-flex flex-column justify-content-center align-items-center mt-4";
     bottomDiv.innerHTML = `
@@ -148,6 +158,30 @@ const dropdown = document.createElement("div");
     const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl);
     });
+}
+
+function updateMovieCard(oldTitle, movie) {
+    const movieCard = document.getElementById(`movie-${oldTitle}`);
+    
+    if (movieCard) {
+        // Update card ID and content
+        movieCard.id = `movie-${movie.title}`;
+        
+        const img = movieCard.querySelector("img");
+        const titleEl = movieCard.querySelector(".card-title");
+        const yearEl = movieCard.querySelector(".card-subtitle");
+        const starsEl = movieCard.querySelector(".star-rating");
+        const topDiv = movieCard.querySelector(".top-div");
+
+        img.src = movie.imageUrl;
+        titleEl.textContent = movie.title;
+        yearEl.textContent = `Year: ${movie.year}`;
+        starsEl.innerHTML = generateStars(movie.rating);
+
+        // Update popover content
+        topDiv.setAttribute("data-bs-content", movie.description);
+        topDiv.setAttribute("title", movie.title);
+    }
 }
 
 function generateStars(rating) {
